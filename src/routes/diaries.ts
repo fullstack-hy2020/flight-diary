@@ -3,11 +3,11 @@ import diaryService from '../services/diaryService';
 import { NewEntrySchema } from '../utils';
 
 import { z } from 'zod';
-import { NewDiaryEntry } from '../types';
+import { NewDiaryEntry, DiaryEntry } from '../types';
 
 const router = express.Router();
 
-router.get('/', (_req, res) => {
+router.get('/', (_req, res: Response<DiaryEntry[]>) => {
   res.send(diaryService.getNonSensitiveEntries());
 });
 
@@ -39,7 +39,7 @@ const errorMiddleware = (error: unknown, _req: Request, res: Response, next: Nex
   }
 };
 
-router.post('/', newDiaryParser, (req: Request<unknown, unknown, NewDiaryEntry>, res: Response) => {
+router.post('/', newDiaryParser, (req: Request<unknown, unknown, NewDiaryEntry>, res: Response<DiaryEntry>) => {
   const addedEntry = diaryService.addDiary(req.body);
   res.json(addedEntry);
 });
